@@ -52,7 +52,7 @@ class Connection(server: Socket) {
     fun sendMessage(message: String) {
         val formatter = SimpleDateFormat("HH:mm:ss")
         val date = Date()
-        output.writeUTF("hoba:message ${aes.encrypt(("[${formatter.format(date)}] $user: $message").toByteArray(), key)}").also {
+        output.writeUTF("hoba:message ${aes.encrypt("[${formatter.format(date)}] $user: $message".toByteArray(), key)}").also {
             // The thing is that if I'll do "messages[messages.size++]" it will not work, lol.
             var messagesCount = messages.size
             messages[messagesCount++] = "[${formatter.format(date)}] $user: $message"

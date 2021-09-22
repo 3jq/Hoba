@@ -41,7 +41,7 @@ class HobaServer(
                         if (!command.startsWith("hoba:auth")) {
                             output.writeUTF("hoba:error \"User is not authorised.\"")
                         } else {
-                            val auth = AuthCommand(
+                            AuthCommand(
                                 client,
                                 authorizationKey,
                                 Integer.parseInt(command.split(" ")[0]),
