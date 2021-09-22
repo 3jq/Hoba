@@ -13,6 +13,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
 import fckuuu.hoba.encryption.AES
+import fckuuu.hoba.json.JsonManagement
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.ObjectInputStream
@@ -22,9 +23,11 @@ import java.util.*
 import javax.crypto.SecretKey
 import kotlin.collections.HashMap
 
-class Connection(server: Socket) {
-    private val messages = hashMapOf<Int, String>()
-    private val user = System.getProperty("user.name")
+class Connection(
+    private val username: String,
+    server: Socket
+) {
+    val jsonManagement = JsonManagement("client")
     lateinit var key: SecretKey
     private val aes = AES()
     private val input = server.getInputStream() as DataInputStream
@@ -32,34 +35,36 @@ class Connection(server: Socket) {
     private val objectInput = server.getInputStream() as ObjectInputStream
 
     fun auth(key: Int): Boolean {
-        val gson = Gson()
+        output.writeUTF("hoba:auth $username $key")
 
-        val jsonObject = JsonObject()
+        var message = input.readUTF()
 
-        jsonObject.add("name", JsonPrimitive(System.getProperty("user.name")))
-        jsonObject.add("key", JsonPrimitive(key))
-
-        output.writeUTF("hoba:auth ${gson.toJson(JsonParser().parse(jsonObject.toString()))}")
-
-        if (input.readUTF().equals("hoba:success", false)) {
+        if (message.equals("hoba:success", false)) {
             this.key = objectInput.readObject() as SecretKey
+            jsonManagement.saveMessages(objectInput.readObject() as HashMap<Int, String>)
             return true
+        } else {
+            println(message.split(" ").toString())
         }
 
         return false
     }
 
+    fun updateMessages() {
+        jsonManagement.saveMessages(objectInput.readObject() as HashMap<Int, String>)
+    }
+
     fun sendMessage(message: String) {
         val formatter = SimpleDateFormat("HH:mm:ss")
         val date = Date()
-        output.writeUTF("hoba:message ${aes.encrypt("[${formatter.format(date)}] $user: $message".toByteArray(), key)}").also {
+        output.writeUTF("hoba:message ${aes.encrypt("[${formatter.format(date)}] $username: $message".toByteArray(), key)}").also {
             // The thing is that if I'll do "messages[messages.size++]" it will not work, lol.
-            var messagesCount = messages.size
-            messages[messagesCount++] = "[${formatter.format(date)}] $user: $message"
+            var messagesCount = jsonManagement.getMessages().size
+            jsonManagement.saveMessage("[${formatter.format(date)}] $username: $message")
         }
     }
 
     fun getMessages(): HashMap<Int, String> {
-        return messages
+        return jsonManagement.getMessages()
     }
 }

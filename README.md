@@ -9,6 +9,10 @@ A messenger written in kotlin. Encrypts your messages with AES.
 - Java 8 or higher.
 
 ## Hosting server for a chat
-1. Download jar from [![releases](https://github.com/fuckyouthinkimboogieman/Hoba/releases)] or build it yourself.
+1. Download jar from <a href="https://github.com/fuckyouthinkimboogieman/Hoba/releases"> releases </a> or build it yourself.
 2. Upload it on your server.
-3. Run the jar: "java -jar hoba.jar "
+3. Run the jar: "java -jar hoba.jar hostserver {(Integer) Port} {(Integer) Authorization Key}"
+
+## Connecting to a chat
+1. Download jar from <a href="https://github.com/fuckyouthinkimboogieman/Hoba/releases"> releases </a> or build it yourself.
+2. Run the jar: "java -jar hoba.jar connect {IP} {(Integer) Port} {(Integer) Authorization Key}"

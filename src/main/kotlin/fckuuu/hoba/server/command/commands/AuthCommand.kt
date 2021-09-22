@@ -8,6 +8,7 @@
 
 package fckuuu.hoba.server.command.commands
 
+import fckuuu.hoba.server.HobaServer
 import fckuuu.hoba.server.command.AbstractCommand
 import java.io.DataOutputStream
 import java.io.ObjectOutputStream
@@ -15,6 +16,7 @@ import java.net.Socket
 import javax.crypto.SecretKey
 
 class AuthCommand(
+    private val parent: HobaServer,
     socket: Socket,
     private val authorizationKey: Int,
     private val userKey: Int,
@@ -30,6 +32,7 @@ class AuthCommand(
 
             output.writeUTF("hoba:success")
             objectOutput.writeObject(key)
+            objectOutput.writeObject(parent.jsonManagement.getMessages())
 
             success = true
         }

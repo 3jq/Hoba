@@ -8,6 +8,7 @@
 
 package fckuuu.hoba.server
 
+import fckuuu.hoba.json.JsonManagement
 import fckuuu.hoba.server.command.commands.AuthCommand
 import fckuuu.hoba.server.command.commands.MessageCommand
 import java.io.DataInputStream
@@ -19,8 +20,7 @@ class HobaServer(
     port: Int,
     private val authorizationKey: Int
 ) {
-    val users = arrayListOf<String>()
-    val messages = hashMapOf<Int, String>()
+    val jsonManagement = JsonManagement("server")
     private val server = ServerSocket(port)
     private val key = KeyGenerator.getInstance("AES/CBC/PKCS5Padding").generateKey()
 
@@ -41,10 +41,15 @@ class HobaServer(
                         if (!command.startsWith("hoba:auth")) {
                             output.writeUTF("hoba:error \"User is not authorised.\"")
                         } else {
+                            if (jsonManagement.getUsers().contains(command.split(" ")[0])) {
+                                output.writeUTF("hoba:error \"User already exists.\"")
+                            }
+
                             AuthCommand(
+                                this,
                                 client,
                                 authorizationKey,
-                                Integer.parseInt(command.split(" ")[0]),
+                                Integer.parseInt(command.split(" ")[1]),
                                 key
                             ).let {
                                 it.execute()
@@ -52,6 +57,7 @@ class HobaServer(
                             }
                         }
                     } else {
+
                         MessageCommand(command, this, client).execute()
                     }
                 }

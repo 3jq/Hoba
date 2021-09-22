@@ -10,6 +10,7 @@ package fckuuu.hoba.server.command.commands
 
 import fckuuu.hoba.server.HobaServer
 import fckuuu.hoba.server.command.AbstractCommand
+import java.io.ObjectOutputStream
 import java.net.Socket
 
 class MessageCommand(
@@ -20,7 +21,10 @@ class MessageCommand(
     override val name = "hoba:message"
 
     override fun execute() {
-        var messagesCount = parent.messages.size
-        parent.messages[messagesCount++] = fullCommand.split(" ")[0]
+        val objectOutput = socket.getOutputStream() as ObjectOutputStream
+        objectOutput.writeObject(parent.jsonManagement.getMessages())
+
+        var messagesCount = parent.jsonManagement.getMessages().size
+        parent.jsonManagement.getMessages()[messagesCount++] = fullCommand.split(" ").toString()
     }
 }

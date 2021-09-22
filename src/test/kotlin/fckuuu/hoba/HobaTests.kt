@@ -13,10 +13,7 @@ import org.junit.jupiter.api.Test
 import java.net.Socket
 
 class HobaTests {
-    @Test fun connectionTest() {
+    @Test fun serverTest() {
         HobaServer(1234, 1234)
-        Hoba(Socket("127.0.0.1", 1234), 1234).let {
-            it.launch()
-        }
     }
 }

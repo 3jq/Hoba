@@ -18,11 +18,15 @@ class Hoba(
     private val server: Socket,
     key: Int
 ) {
-    private val connection: Connection = Connection(server)
+    private val connection: Connection
     private val aes = AES()
     private var success = false
 
     init {
+        val scanner = Scanner(System.`in`)
+        println("Write your username:")
+        val username = scanner.nextLine()
+        connection = Connection(username, server)
         connection.let { success = it.auth(key) }
     }
 
@@ -32,7 +36,8 @@ class Hoba(
                 if (Platform.isWindows()) Runtime.getRuntime().exec("cls") else Runtime.getRuntime().exec("clear")
 
                 println("Successfully connected to server.")
-                for (message in connection.getMessages()) {
+                connection.updateMessages()
+                for (message in connection.jsonManagement.getMessages()) {
                     println(aes.decrypt(message.value.toByteArray(), connection.key))
                 }
 
