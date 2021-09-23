@@ -10,7 +10,6 @@ package fckuuu.hoba.json
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
-import com.google.gson.JsonPrimitive
 import java.io.*
 import java.nio.file.Files
 
@@ -93,13 +92,13 @@ class JsonManagement(val type: String) {
         val rawJson = loadFile(path.toFile())
         val jsonObject = JsonParser().parse(rawJson).asJsonObject
 
-        if (jsonObject["users"] != null) {
-            val userObject = jsonObject["users"].asJsonArray
+        if (jsonObject["messages"] != null) {
+            val messageObject = jsonObject["messages"].asJsonArray
 
             var count = 0
-            userObject.forEach { user ->
+            messageObject.forEach { message ->
                 run {
-                    messages[count] = (user.toString())
+                    messages[count] = message.toString()
                     count++
                 }
             }

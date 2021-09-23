@@ -30,9 +30,9 @@ class Connection(
     val jsonManagement = JsonManagement("client")
     lateinit var key: SecretKey
     private val aes = AES()
-    private val input = server.getInputStream() as DataInputStream
-    private val output = server.getOutputStream() as DataOutputStream
-    private val objectInput = server.getInputStream() as ObjectInputStream
+    private val input: DataInputStream = server.getInputStream() as DataInputStream
+    private val output: DataOutputStream = server.getOutputStream() as DataOutputStream
+    private val objectInput: ObjectInputStream = server.getInputStream() as ObjectInputStream
 
     fun auth(key: Int): Boolean {
         output.writeUTF("hoba:auth $username $key")

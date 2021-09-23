@@ -16,13 +16,13 @@ import javax.crypto.SecretKey
 
 class AES {
     fun encrypt(data: ByteArray, key: SecretKey): String {
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val cipher = Cipher.getInstance("AES")
         cipher.init(ENCRYPT_MODE, key)
         return String(Base64.getEncoder().encode(cipher.doFinal(data)))
     }
 
     fun decrypt(data: ByteArray, key: SecretKey): String {
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val cipher = Cipher.getInstance("AES")
         cipher.init(DECRYPT_MODE, key)
         return String(cipher.doFinal(Base64.getDecoder().decode(data)))
     }
