@@ -29,8 +29,8 @@ class HobaServer(
             Thread {
                 val client = server.accept()
 
-                val input: DataInputStream = client.getInputStream() as DataInputStream
-                val output: DataOutputStream = client.getOutputStream() as DataOutputStream
+                val input = DataInputStream(client.getInputStream())
+                val output = DataOutputStream(client.getOutputStream())
 
                 var authorized = false
 

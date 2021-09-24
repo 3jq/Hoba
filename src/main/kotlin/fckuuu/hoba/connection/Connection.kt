@@ -8,10 +8,6 @@
 
 package fckuuu.hoba.connection
 
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.google.gson.JsonPrimitive
 import fckuuu.hoba.encryption.AES
 import fckuuu.hoba.json.JsonManagement
 import java.io.DataInputStream
@@ -30,9 +26,9 @@ class Connection(
     val jsonManagement = JsonManagement("client")
     lateinit var key: SecretKey
     private val aes = AES()
-    private val input: DataInputStream = server.getInputStream() as DataInputStream
-    private val output: DataOutputStream = server.getOutputStream() as DataOutputStream
-    private val objectInput: ObjectInputStream = server.getInputStream() as ObjectInputStream
+    private val input = DataInputStream(server.getInputStream())
+    private val output = DataOutputStream(server.getOutputStream())
+    private val objectInput = ObjectInputStream(server.getInputStream())
 
     fun auth(key: Int): Boolean {
         output.writeUTF("hoba:auth $username $key")
